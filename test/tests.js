@@ -34,9 +34,7 @@ describe("LATAM API TEST", async () => {
         const response = await latam.program.getPrograms();
         assert.equal(response.map(e => e.id).indexOf(programId), 0);
       } catch (err) {
-        (() => {
-          throw err;
-        }).should.throw();
+        throw err.data;
       }
     });
   });
@@ -59,9 +57,7 @@ describe("LATAM API TEST", async () => {
           const index = identifications.map(e => e.typeCode).indexOf("FFN");
           memberId = identifications[index].value;
         } catch (err) {
-          (() => {
-            throw err;
-          }).should.throw();
+          throw err.data;
         }
       }
     );
@@ -72,9 +68,7 @@ describe("LATAM API TEST", async () => {
         expect(response).to.be.jsonSchema(MemberInfoSchema);
         beforeMiles = response.balance;
       } catch (err) {
-        (() => {
-          throw err;
-        }).should.throw();
+        throw err.data;
       }
     });
   });
@@ -94,9 +88,7 @@ describe("LATAM API TEST", async () => {
           expect(response).to.be.jsonSchema(AccrualCreateSchema);
           transactionNumber = response.number;
         } catch (err) {
-          (() => {
-            throw err;
-          }).should.throw();
+          throw err.data;
         }
       }
     );
@@ -122,9 +114,7 @@ describe("LATAM API TEST", async () => {
             .indexOf(transactionNumber);
           assert((accrualMiles = transactions[index].number));
         } catch (err) {
-          (() => {
-            throw err;
-          }).should.throw();
+          throw err.data;
         }
       }
     );
@@ -140,9 +130,7 @@ describe("LATAM API TEST", async () => {
           expect(response).to.be.jsonSchema(MemberInfoSchema);
           afterMiles = response.balance;
         } catch (err) {
-          (() => {
-            throw err;
-          }).should.throw();
+          throw err.data;
         }
       }
     );
