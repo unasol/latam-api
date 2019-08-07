@@ -1,8 +1,8 @@
-import instance from "./config";
-export default function programs(accessToken) {
+import axios from "axios";
+export default function programs() {
   const t = {};
   t.getPrograms = async () => {
-    return instance(accessToken)
+    return axios
       .get("/programs")
       .then(function(response) {
         return response.data;

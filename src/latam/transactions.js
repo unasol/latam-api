@@ -1,9 +1,9 @@
-import instance from "./config";
+import axios from "axios";
 
 export default function(accessToken) {
   const t = {};
   t.show = (programId, memberId, year) =>
-    instance(accessToken)
+    axios
       .get(
         `/programs/${programId}/members/${memberId}/transactions?year=${year}`
       )

@@ -53,6 +53,10 @@ export const MemberInfoSchema = {
   }
 };
 
+export const MemberCreateSchema = {
+  
+}
+
 export const AccrualCreateSchema = {
   title: "Accrual create",
   type: "object",

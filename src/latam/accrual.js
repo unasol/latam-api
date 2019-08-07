@@ -1,9 +1,8 @@
-import instance from "./config";
-
-export default function(accessToken) {
+import axios from "axios";
+export default function() {
   const t = {};
   t.create = (programId, memberId, body) =>
-    instance(accessToken)
+    axios
       .post(`/programs/${programId}/members/${memberId}/accrual`, body)
       .then(response => response.data)
       .catch(err => Promise.reject(err.response));

@@ -1,4 +1,6 @@
 import chai from "chai";
+import ClientOAuth2 from "client-oauth2";
+import data from "./data";
 import {
   MemberInfoSchema,
   MemberSchema,
@@ -11,8 +13,19 @@ chai.use(require("chai-json-schema"));
 const expect = chai.expect;
 const assert = chai.assert;
 const latam = new Latam({
-  // Configurar con el token generado en https://test.api.latam-pass.latam.com/oauth/token
-  accessToken: "fb4a6a13607e6b3357a9d3f48ea4336ffc52c45c"
+  // environment: "production", // default dev
+  client_credentials: {
+    //support only client_credentials
+    clientId: "abc",
+    clientSecret: "123",
+    accessTokenUri: "https://test.api.latam-pass.latam.com/oauth/token",
+    scopes: [
+      "accrual-create",
+      "member-create",
+      "member-show",
+      "Transactions-show"
+    ]
+  }
 });
 
 describe("LATAM API TEST", async () => {
@@ -28,22 +41,51 @@ describe("LATAM API TEST", async () => {
   let transactionNumber = 0;
   let afterMiles = 0;
 
+  describe("oAuth2", async () => {
+    it("Debe authenticar mediante oauth2", async () => {
+      try {
+        const user = await latam.getToken();
+        expect(user).to.an.instanceOf(ClientOAuth2.Token);
+        expect(user).to.have.property("accessToken");
+        expect(user.tokenType).to.equal("bearer");
+      } catch (error) {
+        throw error;
+      }
+    });
+  });
   describe("/GET programs", async () => {
     it("Debe obtener los programas y validar existencia del programa latam-pass", async () => {
       try {
-        const response = await latam.program.getPrograms();
+        const program = await latam.program();
+        const response = await program.getPrograms();
         assert.equal(response.map(e => e.id).indexOf(programId), 0);
       } catch (err) {
         throw err.data;
       }
     });
   });
+  describe("/POST member", async () => {
+    step(
+      `Debe crear un socio {type: ${doctType}, number: ${docValue}}`,
+      async () => {
+        try {
+          const member = await latam.member();
+          const response = await member.create(programId, data.newPerson);
+          console.log("SUCCESS", response);
+        } catch (err) {
+          throw err.data;
+        }
+      }
+    );
+  });
+
   describe("/GET member", async () => {
     step(
       `Debe obtener memberId del socio {type: ${doctType}, number: ${docValue}}`,
       async () => {
         try {
-          const response = await latam.member.getMember(
+          const member = await latam.member();
+          const response = await member.getMember(
             programId,
             doctType,
             docValue
@@ -64,7 +106,8 @@ describe("LATAM API TEST", async () => {
 
     step(`Debe obtener las millas actuales del socio ${memberId}`, async () => {
       try {
-        const response = await latam.member.getMemberInfo(programId, memberId);
+        const member = await latam.member();
+        const response = await member.getMemberInfo(programId, memberId);
         expect(response).to.be.jsonSchema(MemberInfoSchema);
         beforeMiles = response.balance;
       } catch (err) {
@@ -78,7 +121,8 @@ describe("LATAM API TEST", async () => {
       `Debe acumular ${accrualMiles} para el socio ${memberId}`,
       async () => {
         try {
-          const response = await latam.accrual.create(programId, memberId, {
+          const accrual = await latam.accrual();
+          const response = await accrual.create(programId, memberId, {
             miles: accrualMiles,
             product: {
               name: "Consumo",
@@ -97,11 +141,8 @@ describe("LATAM API TEST", async () => {
       "Debe obtener las transacciones y validar si existe el acumulado",
       async () => {
         try {
-          const response = await latam.transaction.show(
-            programId,
-            memberId,
-            year
-          );
+          const transaction = await latam.transaction();
+          const response = await transaction.show(programId, memberId, year);
           expect(response).to.be.an("array");
           expect(response).to.have.lengthOf(1);
           expect(response[0]).to.be.jsonSchema(TransactionSchema);
@@ -123,10 +164,8 @@ describe("LATAM API TEST", async () => {
       `Debe obteger la cantidad actual de millas para ${memberId}`,
       async () => {
         try {
-          const response = await latam.member.getMemberInfo(
-            programId,
-            memberId
-          );
+          const member = await latam.member();
+          const response = await member.getMemberInfo(programId, memberId);
           expect(response).to.be.jsonSchema(MemberInfoSchema);
           afterMiles = response.balance;
         } catch (err) {
