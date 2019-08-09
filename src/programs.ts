@@ -1,5 +1,6 @@
 import axios from "axios";
-export default function programs() {
+import { handlerError } from "./helpers/handler_error";
+export default function programs(isDebug: boolean) {
     const t = {
         getPrograms: async () => {
             return axios
@@ -7,9 +8,7 @@ export default function programs() {
                 .then(function (response) {
                     return response.data;
                 })
-                .catch(function (err) {
-                    return Promise.reject(err.response);
-                });
+                .catch(err => Promise.reject(handlerError(err, isDebug)));
         }
     };
 

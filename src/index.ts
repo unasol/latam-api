@@ -17,29 +17,31 @@ export default class Latam {
 
     async program() {
         await this.createInstance();
-        return program();
+        return program(this._isDebug());
     }
     async accrual() {
         await this.createInstance();
-        return accrual();
+        return accrual(this._isDebug());
     }
     async transaction() {
         await this.createInstance();
-        return transaction();
+        return transaction(this._isDebug());
     }
 
     async member() {
         await this.createInstance();
-        return member();
+        return member(this._isDebug());
     }
 
     async createInstance() {
         const user = await this.getToken();
         let apiUrl = "https://test.api.latam-pass.latam.com";
-        if (this.environment === "production")
+        if (!this._isDebug())
             apiUrl = "https://api.latam-pass.latam.com";
         instance(apiUrl, user.accessToken);
     }
+
+    _isDebug = () => this.environment != "production";
 
     getToken() {
         const oauth2 = new ClientOAuth2(this.config);

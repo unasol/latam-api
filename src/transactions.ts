@@ -1,6 +1,7 @@
 import axios from "axios";
+import { handlerError } from "./helpers/handler_error";
 
-export default function () {
+export default function (isDebug: boolean) {
   const t = {
     show: (programId: string, memberId: string, year: string) =>
       axios
@@ -8,7 +9,7 @@ export default function () {
           `/programs/${programId}/members/${memberId}/transactions?year=${year}`
         )
         .then(response => response.data)
-        .catch(err => Promise.reject(err.response))
+        .catch(err => Promise.reject(handlerError(err, isDebug)))
   }
   return t;
 }

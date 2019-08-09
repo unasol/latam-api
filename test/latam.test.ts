@@ -1,4 +1,4 @@
-import {assert, expect, use, should} from "chai";
+import { assert, expect, use, should } from "chai";
 import * as ClientOAuth2 from "client-oauth2";
 import ChaiJsonSchema = require('chai-json-schema');
 import data from "./data";
