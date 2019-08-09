@@ -74,7 +74,6 @@ describe("LATAM API TEST", async () => {
         try {
           const member = await latam.member();
           const response = await member.create(programId, data.newPerson);
-          console.log("SUCCESS", response);
         } catch (err) {
           throw err.data;
         }

@@ -1,5 +1,5 @@
 {
-  "name": "latam_api",
+  "name": "latam-api",
   "version": "1.0.0",
   "description": "Latam api",
   "main": "dist/index.js",
