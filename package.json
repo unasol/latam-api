@@ -1,5 +1,5 @@
 {
-  "name": "latam-api",
+  "name": "@unasol/latam-api",
   "version": "1.0.1",
   "description": "Latam api",
   "main": "dist/index.js",
@@ -12,7 +12,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/unasol/latam-program.git"
+    "url": "git://github.com/unasol/latam-api.git"
   },
   "keywords": [
     "latam api"
