@@ -1,17 +1,17 @@
-import { assert, expect, use, should } from "chai";
+import { assert, expect, should, use } from "chai";
 import * as ClientOAuth2 from "client-oauth2";
-import ChaiJsonSchema = require('chai-json-schema');
-import data from "./data";
+// import ChaiJsonSchema = require('chai-json-schema');
 import {
+  AccrualCreateSchema,
   MemberInfoSchema,
   MemberSchema,
-  AccrualCreateSchema,
   TransactionSchema
 } from "../src/schemas";
+import data from "./data";
 
-import Latam from "../src";
 import { step } from "mocha-steps";
-use(ChaiJsonSchema);
+import Latam from "../src";
+use(require('chai-json-schema'));
 should();
 // const expect = chai.expect;
 // const assert = chai.assert;
