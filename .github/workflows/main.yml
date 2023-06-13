@@ -13,6 +13,7 @@ jobs:
           node-version: '12.x'
           registry-url: 'https://registry.npmjs.org'
           scope: '@unasol'
+      - run: npm install
       - run: npm ci
       - run: npm publish
         env:
